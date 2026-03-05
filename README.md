@@ -8,6 +8,10 @@ Pure Python holiday engine for developers. Compute [Easter dates](https://holida
 
 > **Browse holidays by country at [holidayfyi.com](https://holidayfyi.com/)** -- holiday calendars, upcoming dates, and traditions for countries worldwide.
 
+<p align="center">
+  <img src="demo.gif" alt="holidayfyi CLI demo" width="800">
+</p>
+
 ## Install
 
 ```bash
