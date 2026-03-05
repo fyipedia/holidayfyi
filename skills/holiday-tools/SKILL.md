@@ -46,6 +46,10 @@ Add to your `claude_desktop_config.json`:
 - Finding specific weekday occurrences (like Thanksgiving)
 - Counting days until the next holiday
 
+## Demo
+
+![HolidayFYI CLI Demo](https://raw.githubusercontent.com/fyipedia/holidayfyi/main/demo.gif)
+
 ## Links
 
 - [Holiday Calendar](https://holidayfyi.com/) -- Holidays for every country
