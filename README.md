@@ -16,6 +16,9 @@ Pure Python holiday engine for developers. Compute [Easter dates](https://holida
 
 - [Install](#install)
 - [Quick Start](#quick-start)
+- [What You Can Do](#what-you-can-do)
+  - [Holiday Lookup](#holiday-lookup)
+  - [Easter Date Calculation](#easter-date-calculation)
 - [How Easter is Calculated](#how-easter-is-calculated)
 - [Fixed vs Moveable Holidays](#fixed-vs-moveable-holidays)
 - [Country Holidays](#country-holidays-optional)
@@ -69,6 +72,79 @@ from holidayfyi import is_weekend, get_weekday_name
 is_weekend(date(2026, 3, 7))      # True (Saturday)
 get_weekday_name(date(2026, 3, 2)) # "Monday"
 ```
+
+## What You Can Do
+
+### Holiday Lookup
+
+Public holidays vary dramatically across countries -- the United States observes 11 federal holidays, Japan has 16 national holidays, and India recognizes over 30 gazetted holidays. Many holidays follow complex rules: some are fixed to a calendar date (Christmas on December 25), others fall on a specific weekday occurrence (Thanksgiving on the 4th Thursday of November), and some depend on astronomical calculations (Easter, Chinese New Year). With the optional `python-holidays` integration, you can query public holidays for 50+ countries, find upcoming holidays, and check what holidays fall on any given date.
+
+| Function | Description | Dependencies |
+|----------|-------------|-------------- |
+| `nth_weekday_of_month()` | Find the nth weekday in a month (e.g., 3rd Monday) | Core (zero deps) |
+| `next_occurrence()` | Next occurrence of a fixed month/day | Core (zero deps) |
+| `days_until()` | Count days until any target date | Core (zero deps) |
+| `is_weekend()` | Check if a date falls on Saturday or Sunday | Core (zero deps) |
+| `get_upcoming_holidays()` | Next n public holidays for a country | `[holidays]` extra |
+| `holidays_on_date()` | Check holidays across multiple countries on a date | `[holidays]` extra |
+
+```python
+from holidayfyi import nth_weekday_of_month, next_occurrence, days_until
+from datetime import date
+
+# Find the 3rd Monday of January 2026 (Martin Luther King Jr. Day)
+mlk_day = nth_weekday_of_month(2026, 1, 0, 3)
+print(mlk_day)  # 2026-01-19
+
+# Find the 4th Thursday of November 2026 (US Thanksgiving)
+thanksgiving = nth_weekday_of_month(2026, 11, 3, 4)
+print(thanksgiving)  # 2026-11-26
+
+# Next occurrence of July 4th (US Independence Day)
+july4 = next_occurrence(7, 4, from_date=date(2026, 8, 1))
+print(july4)  # 2027-07-04
+
+# Count days until New Year's Day
+print(days_until(date(2027, 1, 1), from_date=date(2026, 6, 15)))  # 200
+```
+
+Learn more: [World Holiday Calendar](https://holidayfyi.com/) · [Holidays by Country](https://holidayfyi.com/country/)
+
+### Easter Date Calculation
+
+Easter is the most computationally interesting holiday in the calendar. Its date is determined by the Computus -- an algorithm that combines solar and lunar cycles based on a rule from the Council of Nicaea (325 AD): Easter falls on the first Sunday after the first ecclesiastical full moon on or after March 21. The Western (Gregorian) computation uses the Anonymous Gregorian algorithm, producing dates between March 22 and April 25. The Orthodox computation uses Meeus's Julian algorithm, yielding Gregorian dates between April 4 and May 8. In some years the two dates coincide; in others they differ by up to 5 weeks.
+
+| Tradition | Algorithm | Date Range | Calendar Basis |
+|-----------|-----------|------------|----------------|
+| Western | Anonymous Gregorian (Meeus/Jones/Butcher) | Mar 22 -- Apr 25 | Gregorian |
+| Orthodox | Meeus Julian | Apr 4 -- May 8 (Gregorian) | Julian, mapped to Gregorian |
+
+```python
+from holidayfyi import easter_western, easter_orthodox
+
+# Compute Western and Orthodox Easter dates for any year
+for year in range(2026, 2031):
+    w = easter_western(year)
+    o = easter_orthodox(year)
+    gap = (o - w).days
+    print(f"{year}: Western {w}, Orthodox {o}, gap {gap} days")
+
+# 2026: Western 2026-04-05, Orthodox 2026-04-19, gap 14 days
+# 2027: Western 2027-03-28, Orthodox 2027-05-02, gap 35 days
+# 2028: Western 2028-04-16, Orthodox 2028-04-16, gap 0 days
+
+# Easter-dependent holidays follow by simple arithmetic
+easter = easter_western(2026)
+from datetime import timedelta
+ash_wednesday = easter - timedelta(days=46)
+good_friday = easter - timedelta(days=2)
+pentecost = easter + timedelta(days=49)
+print(f"Ash Wednesday: {ash_wednesday}")  # 2026-02-18
+print(f"Good Friday: {good_friday}")      # 2026-04-03
+print(f"Pentecost: {pentecost}")          # 2026-05-24
+```
+
+Learn more: [Easter Date Calculator](https://holidayfyi.com/easter/) · [Holiday Date Tools](https://holidayfyi.com/tools/date-calculator/)
 
 ## How Easter is Calculated
 
