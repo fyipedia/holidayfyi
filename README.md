@@ -1,6 +1,6 @@
 # holidayfyi
 
-[![PyPI](https://img.shields.io/pypi/v/holidayfyi)](https://pypi.org/project/holidayfyi/)
+[![PyPI version](https://agentgif.com/badge/pypi/holidayfyi/version.svg)](https://pypi.org/project/holidayfyi/)
 [![Python](https://img.shields.io/pypi/pyversions/holidayfyi)](https://pypi.org/project/holidayfyi/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
