@@ -1,14 +1,15 @@
 """HTTP API client for holidayfyi.com REST endpoints.
 
-Requires: pip install holidayfyi[api]
+Requires the ``api`` extra: ``pip install holidayfyi[api]``
 
 Usage::
 
     from holidayfyi.api import HolidayFYI
 
-    with HolidayFYI() as client:
-        result = client.holidays("US")
-        print(result)
+    with HolidayFYI() as api:
+        items = api.list_countries()
+        detail = api.get_country("example-slug")
+        results = api.search("query")
 """
 
 from __future__ import annotations
@@ -19,61 +20,82 @@ import httpx
 
 
 class HolidayFYI:
-    """API client for the holidayfyi.com REST API."""
+    """API client for the holidayfyi.com REST API.
+
+    Provides typed access to all holidayfyi.com endpoints including
+    list, detail, and search operations.
+
+    Args:
+        base_url: API base URL. Defaults to ``https://holidayfyi.com``.
+        timeout: Request timeout in seconds. Defaults to ``10.0``.
+    """
 
     def __init__(
         self,
-        base_url: str = "https://holidayfyi.com/api",
+        base_url: str = "https://holidayfyi.com",
         timeout: float = 10.0,
     ) -> None:
         self._client = httpx.Client(base_url=base_url, timeout=timeout)
 
     def _get(self, path: str, **params: Any) -> dict[str, Any]:
-        resp = self._client.get(path, params={k: v for k, v in params.items() if v is not None})
+        resp = self._client.get(
+            path,
+            params={k: v for k, v in params.items() if v is not None},
+        )
         resp.raise_for_status()
         result: dict[str, Any] = resp.json()
         return result
 
-    def holidays(self, country_code: str) -> dict[str, Any]:
-        """Get holidays for a country.
+    # -- Endpoints -----------------------------------------------------------
 
-        Args:
-            country_code: ISO 3166-1 alpha-2 country code (e.g., "US", "KR").
+    def list_countries(self, **params: Any) -> dict[str, Any]:
+        """List all countries."""
+        return self._get("/api/v1/countries/", **params)
 
-        Returns:
-            Dict with holiday data for the country.
-        """
-        return self._get(f"/holidays/{country_code}/")
+    def get_country(self, slug: str) -> dict[str, Any]:
+        """Get country by slug."""
+        return self._get(f"/api/v1/countries/" + slug + "/")
 
-    def upcoming(self, country_code: str, n: int = 10) -> dict[str, Any]:
-        """Get upcoming holidays for a country.
+    def list_faqs(self, **params: Any) -> dict[str, Any]:
+        """List all faqs."""
+        return self._get("/api/v1/faqs/", **params)
 
-        Args:
-            country_code: ISO 3166-1 alpha-2 country code.
-            n: Number of upcoming holidays to return.
+    def get_faq(self, slug: str) -> dict[str, Any]:
+        """Get faq by slug."""
+        return self._get(f"/api/v1/faqs/" + slug + "/")
 
-        Returns:
-            Dict with upcoming holidays list.
-        """
-        return self._get(f"/holidays/{country_code}/upcoming/", n=n)
+    def list_glossary(self, **params: Any) -> dict[str, Any]:
+        """List all glossary."""
+        return self._get("/api/v1/glossary/", **params)
 
-    def on_date(self, date_str: str, countries: list[str] | None = None) -> dict[str, Any]:
-        """Get holidays on a specific date across countries.
+    def get_term(self, slug: str) -> dict[str, Any]:
+        """Get term by slug."""
+        return self._get(f"/api/v1/glossary/" + slug + "/")
 
-        Args:
-            date_str: Date in ISO format (e.g., "2026-12-25").
-            countries: Optional list of country codes to check.
+    def list_guides(self, **params: Any) -> dict[str, Any]:
+        """List all guides."""
+        return self._get("/api/v1/guides/", **params)
 
-        Returns:
-            Dict mapping country codes to holiday names.
-        """
-        params: dict[str, Any] = {}
-        if countries:
-            params["countries"] = ",".join(countries)
-        return self._get(f"/holidays/on-date/{date_str}/", **params)
+    def get_guide(self, slug: str) -> dict[str, Any]:
+        """Get guide by slug."""
+        return self._get(f"/api/v1/guides/" + slug + "/")
+
+    def list_holidays(self, **params: Any) -> dict[str, Any]:
+        """List all holidays."""
+        return self._get("/api/v1/holidays/", **params)
+
+    def get_holiday(self, slug: str) -> dict[str, Any]:
+        """Get holiday by slug."""
+        return self._get(f"/api/v1/holidays/" + slug + "/")
+
+    def search(self, query: str, **params: Any) -> dict[str, Any]:
+        """Search across all content."""
+        return self._get(f"/api/v1/search/", q=query, **params)
+
+    # -- Lifecycle -----------------------------------------------------------
 
     def close(self) -> None:
-        """Close the HTTP client."""
+        """Close the underlying HTTP client."""
         self._client.close()
 
     def __enter__(self) -> HolidayFYI:
