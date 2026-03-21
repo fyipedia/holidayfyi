@@ -144,9 +144,7 @@ print(f"Good Friday: {good_friday}")      # 2026-04-03
 print(f"Pentecost: {pentecost}")          # 2026-05-24
 ```
 
-Learn more: [Easter Date Calculator](https://holidayfyi.com/easter/) · [Holiday Date Tools](https://holidayfyi.com/tools/date-calculator/)
-
-## How Easter is Calculated
+Learn more: ## How Easter is Calculated
 
 Easter is the most computationally interesting holiday because its date depends on a combination of solar and lunar cycles. The rule established at the Council of Nicaea (325 AD) states: Easter falls on the first Sunday after the first full moon on or after the spring equinox (March 21).
 
@@ -316,11 +314,8 @@ Full [API documentation](https://holidayfyi.com/developers/) at holidayfyi.com.
 ## Learn More About Holidays
 
 - **Browse**: [Holiday Calendar](https://holidayfyi.com/) · [Countries](https://holidayfyi.com/country/) · [Today's Holidays](https://holidayfyi.com/today/)
-- **Tools**: [Date Calculator](https://holidayfyi.com/tools/date-calculator/) · [Easter Calculator](https://holidayfyi.com/tools/easter/)
-- **Guides**: [Glossary](https://holidayfyi.com/glossary/) · [Blog](https://holidayfyi.com/blog/)
-- **API**: [REST API Docs](https://holidayfyi.com/developers/) · [OpenAPI Spec](https://holidayfyi.com/api/openapi.json)
-
-## Utility FYI Family
+- **Tools**: - **Guides**: [Glossary](https://holidayfyi.com/glossary/) · [Blog](https://holidayfyi.com/blog/)
+- **API**: [REST API Docs](https://holidayfyi.com/developers/) · ## Utility FYI Family
 
 Part of the [FYIPedia](https://fyipedia.com) open-source developer tools ecosystem — everyday developer reference and conversion tools.
 
